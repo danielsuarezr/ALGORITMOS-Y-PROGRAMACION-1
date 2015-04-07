@@ -1,0 +1,148 @@
+// examinito.cpp : Defines the entry point for the console application.
+//
+
+#include "stdafx.h"
+#include "conio.h"
+#include <iostream>
+#define TAM 30
+#define col 10
+#define fil 10 
+
+using namespace std;
+
+void m_f();
+void e_v();
+void cargar_vector(float V[], int n);
+void mostrar_vector(float V[], int n);
+void e_m();
+void cargar_matriz(float M[fil][col], int m, int n);
+void mostrar_matriz(float M[fil][col], int m, int n);
+void e_menu();
+
+void main()
+{
+	int opcion;
+	do{
+	   cout<<"menu\t\n";
+	   cout<<"1. mostrar ejemplo de funcion "<<endl;
+	   cout<<"2. mostrar ejemplo de vector "<<endl;
+	   cout<<"3. mostrar ejemplo de matriz "<<endl;
+	   cout<<"4. mostrar ejemplo de menu "<<endl;
+	   cout<<"0. salir"<<endl;
+	   cin>>opcion;
+	   switch(opcion)
+	   {
+	      case 1:
+		      cout<<"ejemplo de funcion\t"<<endl;
+		      m_f();
+		      break;
+	      case 2:
+		      cout<<"ejemplo de vector\t"<<endl;
+		      e_v();
+		      break;
+	      case 3:
+		      cout<<"ejemplo de matriz\t"<<endl;
+		      e_m();
+		      break;
+	      case 4:
+		      cout<<"ejemplo de menu\t\n";
+		      e_menu();
+		      break;
+	      case 0:
+		      cout<<"saliendo";
+		      _getch();
+		      break;
+	      default :
+		      cout<<"error";
+
+	   }
+	}while(opcion!=0);
+	_getch();
+}
+
+void m_f()
+{
+	cout<<"una funcion es un subprograma"<<endl;
+}
+void e_v()
+{
+	int n;
+	float V[TAM];
+	cout<<"tamaño de vector";
+	cin>>n;
+	cargar_vector(V,n);
+	mostrar_vector(V,n);
+}
+void e_m()
+{
+	int n, m;
+	float M[fil][col];
+	cout<<"ingrese numero de filas";
+	cin>>m;
+	cout<<"ingrese numero de columnas";
+	cin>>n;
+	cargar_matriz(M,m,n);
+	mostrar_matriz(M,m,n);
+}
+void e_menu()
+{
+	int aux;
+	do{
+	cout<<"elegir\t\n";
+	cout<<"1. seguir"<<endl;
+	cout<<"2. volver"<<endl;
+	cin>>aux;
+	switch(aux)
+	{
+	case 1:
+		cout<<"siguendo"<<endl;
+		break;
+	case 2:
+		cout<<"volviendo al menu principal"<<endl;
+		_getch();
+		break;
+	default:
+		cout<<"error";
+		_getch();
+		break;
+	}
+	}while(aux!=2);
+}
+
+
+void cargar_vector(float V[], int n)
+{
+	for(int i=0;i<n;i++)
+		{
+			cout<<"["<<i<<"]=";
+			cin>>V[i];
+	    }
+}
+void mostrar_vector(float V[],int n)
+{
+	for(int i=0;i<n;i++)
+		cout<<"["<<i<<"]="<<V[i]<<endl;
+	_getch();
+}
+void cargar_matriz(float M[fil][col], int m, int n)
+{
+	for(int i=0;i<m;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			cout<<"["<<i<<"]["<<j<<"]"<<endl;
+			cin>>M[i][j];
+		}
+	}
+}
+void mostrar_matriz(float M[fil][col], int m, int n)
+{
+		for(int i=0;i<m;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			cout<<M[i][j]<<"   ";
+		}
+		cout<<endl;
+	}
+}
