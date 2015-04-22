@@ -1,0 +1,207 @@
+// menu de todo.cpp: define el punto de entrada de la aplicación de consola.
+//
+
+#include "stdafx.h"
+#include "conio.h"
+#include <iostream>
+#include <string>
+#define fil 10    
+#define col 10
+using namespace std;
+
+struct matrizx2
+{
+	int M[fil][col];
+};
+struct alguien
+{
+	string nombre;
+	int edad;
+};
+
+void cargarmatrizx2(matrizx2 mat[fil][col], int M, int N, int m, int n);
+void mostrarmatrizx2(matrizx2 mat[fil][col], int M, int N, int m, int n);
+void matriz(int mat[fil][col], int m, int n);
+void mostrarm(int mat[fil][col], int m, int n);
+void cargarv(int vec[], int n);
+void mostrarv(int vec[], int n);
+void cargars(alguien x[], int n);
+void mostrars(alguien x[], int n);
+void ordenarfila(int mat[fil][col], int m, int n);
+
+void main()
+{
+	int mato[fil][col], vec[fil], opcion, mat[fil][col], M, m, N, nv, n, nvs,mo,no;
+	matrizx2 matx2[fil][col];
+	alguien x[fil];
+	do{
+		cout << "1. cargar un vector" << endl;
+		cout << "2. cargar una matriz" << endl;
+		cout << "3. cargar un struct" << endl;
+		cout << "4. cargar una matriz de matriz" << endl;
+		cout << "5. ordenar las filas de la matriz " << endl;
+		cout << "0. salir" << endl;
+		cout << "opcion = ";
+		cin >> opcion;
+		switch (opcion)
+		{
+		case 1:
+			cout << "ingrese n: ";
+			cin >> nv;
+			cargarv(vec, n);
+			mostrarv(vec, n);
+			break;
+		case 2:
+			cout << "ingrese m: ";
+			cin >> m;
+			cout << "ingrese n: ";
+			cin >> n;
+			matriz(mat, m, n);
+			mostrarm(mat, m, n);
+			break;
+		case 3:
+			cout << "ingrese n: ";
+			cin >> nvs;
+			cargars(x, n);
+			mostrars(x, n);
+			break;
+		case 4:
+			cout << "ingrese m de la matriz interna: ";
+			cin >> m;
+			cout << "ingrese n de ma matriz interna: ";
+			cin >> n;
+			cout << "ingrese M de la matriz externa: ";
+			cin >> M;
+			cout << "ingrese N de la matriz externa: ";
+			cin >> N;
+			cargarmatrizx2(matx2, M, N, m, n);
+			mostrarmatrizx2(matx2, M, N, m, n);
+			break;
+		case 5:
+			cout << "ordenar matriz";
+			cout << "ingrese m de la matriz a ordenar";
+			cin >> mo;
+			cout << "ingrese n de la matriz a ordenar";
+			cin >> no;
+			matriz(mato, mo, no);
+			ordenarfila(mato, mo, no);
+			mostrarm(mato, mo, no);
+			break;
+		case 0:
+			cout << "saliendo" << endl;
+			break;
+		default:
+			cout << "dato incorrecto, ingrese otro dato" << endl;
+		}
+	} while (opcion != 0);
+	_getch();
+}
+void cargarmatrizx2(matrizx2 mat[fil][col], int M, int N, int m, int n)
+{
+	for (int i = 0; i < M; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			for (int k = 0; k < m; k++)
+			{
+				for (int l = 0; l < n; l++)
+				{
+					cout << "ingese dato [" << i << "]" << "[" << j << "]" << ".[" << k << "]" << "[" << l << "]" << endl;
+					cin >> mat[i][j].M[k][l];
+				}
+			}
+		}
+	}
+
+}
+void mostrarmatrizx2(matrizx2 mat[fil][col], int M, int N, int m, int n)
+{
+	for (int i = 0; i < M; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			for (int k = 0; k < m; k++)
+			{
+				for (int l = 0; l < n; l++)
+				{
+					cout << "[" << i << "]" << "[" << j << "]" << ".[" << k << "]" << "[" << l << "]= " << mat[i][j].M[k][l];
+				}
+			}cout << endl;
+		}
+	}cout << endl;
+}
+void matriz(int mat[fil][col], int m, int n)
+{
+	for (int i = 0; i < m; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cout << "ingrse dato [" << i << "][" << j << "]=";
+			cin >> mat[i][j];
+		}
+	}
+}
+void mostrarm(int mat[fil][col], int m, int n)
+{
+	for (int i = 0; i < m; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cout << mat[i][j] << "\t";
+		}cout << endl;
+	}
+}
+void cargarv(int vec[], int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		cout << "ingrese dato [" << i << "]= ";
+		cin >> vec[i];
+	}
+}
+void mostrarv(int vec[], int n)
+{
+	for (int i = 0; i < n; i++)
+		cout << "[" << i << "]= " << vec[i];
+}
+void cargars(alguien x[], int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		cout << "ingrese nombre : ";
+		cin.ignore();
+		getline(cin, x[i].nombre);
+		cout << "ingrese edad de " << x[i].nombre;
+		cin >> x[i].edad;
+	}
+}
+void mostrars(alguien x[], int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		cout << x[i].nombre << " tiene " << x[i].edad << " anhos " << endl;
+	}
+}
+void ordenarfila(int mat[fil][col], int m, int n)
+{
+	int aux;
+	for (int i = 0; i < m; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			for (int k = 0; k < m; k++)
+			{
+				for (int l = 0; l < n; l++)
+				{
+					if (mat[i][j] < mat[i][j])
+					{
+						aux = mat[i][j];
+						mat[i][j] = mat[k][l];
+						mat[k][l] = aux;
+					}
+				}
+			}
+		}
+
+	}
+}
