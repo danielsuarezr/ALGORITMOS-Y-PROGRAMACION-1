@@ -1,0 +1,680 @@
+// proyecto.cpp : Defines the entry point for the console application.
+//
+
+#include "stdafx.h"
+#include "conio.h"
+#include <iostream>
+#include <stdio.h>
+#include <string>
+#include <math.h>
+
+using namespace std;
+
+struct tipo_usuarios
+{
+	int nrousu;
+	string nombreusu;
+	string clave;
+	int seguridad;
+}usuario;
+
+struct tipo_participante
+{
+	string materia;
+	string sigla;
+	int registro;
+	string nombrepar;
+	string nombrep;
+	int mesa;
+	float nota;
+}participante;
+
+void cargar_usuarios(void);
+void cargar_participante(void);
+void modificar_usuarios(void);
+void modificar_participante(void);
+void eliminar_usuarios(void);
+void eliminar_participante(void);
+void mostrar_usuarios(int nivel);
+void mostrar_participantes(void);
+int verificar_usuario(void);
+void calificar(void);
+void buscar_par(void);
+int leer_num()
+{
+	int num=0;
+	bool seguir;
+	string aux;
+	do
+	{
+		seguir = false;
+		getline(cin,aux);
+		num = atoi(aux.c_str());
+		if(aux == "0") num++;
+		if(aux.size() != int(log10(float(num))+1))
+		{
+			cout<<"ingresar solo numeros"<<endl;
+			cout<<"intente nuevamente: ";
+			seguir = true;
+		}
+		if(aux == "0") num--;
+	}while(seguir);
+	return num;
+}
+int verificar_exist()
+{
+	int v;
+	FILE *ptr;
+	ptr=fopen("usuarios","rb");
+	if(ptr==NULL)
+	{
+		v=0;
+	}
+	else
+	{
+		v=1;
+		fclose(ptr);
+	}
+	return v;
+}
+
+void main()
+{
+	int nivel, opcion, valid, nro_us,v;
+	string admin = "admin", pass = "0000", adminver, passver;
+	do{
+		cout << endl << "usuarios\t\n";
+		cout << "1. usuario modificador" << endl;
+		cout << "2. usuario calificado" << endl;
+		cout << "3. usuario espectador" << endl;
+		cout << "9. salir " << endl;
+		cout << "opcion: ";
+		opcion = leer_num();
+		switch (opcion)
+		{
+		case 1:
+			mostrar_usuarios(3);
+			v=verificar_exist();
+			if (v == 1)
+			{
+
+				nivel = verificar_usuario();
+				if (nivel == 3)
+				{
+					int op1;
+					do{
+						cout << "1. crear usuario" << endl;
+						cout << "2. modificar usuario" << endl;
+						cout << "3. eliminar usuario" << endl;
+						cout << "4. ver usuarios" << endl;
+						cout << "5. administrar participantes" << endl;
+						cout << "0. salir" << endl;
+						cout << "opcion: ";
+						op1 = leer_num();
+
+						switch (op1)
+						{
+						case 1:
+							cargar_usuarios();
+							break;
+						case 2:
+							cout << "modificar usuario\t\n";
+							modificar_usuarios();
+							break;
+						case 3:
+							cout << "eliminar usuario\t\n";
+							eliminar_usuarios();
+							break;
+						case 4:
+							mostrar_usuarios(1);
+							break;
+						case 5:
+							int op2;
+							do{
+								cout << "\t administrar participantes" << endl;
+								cout << "1. cargar participantes " << endl;
+								cout << "2. modificar participante " << endl;
+								cout << "3. eliminar participante " << endl;
+								cout << "4. mostrar participantes " << endl;
+								cout << "0. salir " << endl;
+								cout << "opcion: ";
+								op2 = leer_num();
+
+								switch (op2)
+								{
+								case 1:
+									cout << "\t cargar participantes" << endl;
+									cargar_participante();
+									break;
+								case 2:
+									cout << "\t modificar participante" << endl;
+									modificar_participante();
+									break;
+								case 3:
+									cout << "\t eliminar participante " << endl;
+									eliminar_participante();
+									break;
+								case 4:
+									cout << "\t mostrar participantes" << endl << endl;
+									mostrar_participantes();
+									_getch();
+									break;
+								case 0:
+									cout << "saliendo" << endl;
+									_getch();
+									break;
+								default:
+									cout << "opcion invalida" << endl;
+									break;
+								}
+							} while (op2 != 0);
+
+							break;
+						case 0:
+							cout << "saliendo\t" << endl;
+							_getch();
+							break;
+						default:
+							cout << "opcion invalida" << endl;
+							break;
+						}
+					} while (op1 != 0);
+				}
+				else
+				{
+					cout << "acceso negado " << endl;
+
+				}
+			}
+			else
+			{
+				do{
+					valid = 0;
+					cout << "ingrese el usuario de proveedor" << endl;
+					cin >> adminver;
+					cout << "ingrese la clave de proveedor" << endl;
+					cin >> passver;
+					if (admin != adminver && pass != passver)
+					{
+						cout << "usuario o clave incorrecta" << endl;
+						valid = 1;
+					}
+				} while (valid != 0);
+
+				cout << "debera crear el primer usuario " << endl;
+				cargar_usuarios();
+			}
+			break;
+		case 2:
+			mostrar_usuarios(2);
+			nivel = verificar_usuario();
+			if (nivel >= 2)
+			{
+				int op3;
+				do{
+					cout << "\t usuario calificador" << endl;
+					cout << "1. mostrar participantes" << endl;
+					cout << "2. calificar participante" << endl;
+					cout << "3. buscar " << endl;
+					cout << "0. salir" << endl;
+					cout << "opcion: ";
+						op3 = leer_num();
+					switch (op3)
+					{
+					case 1:
+						cout << "\t mostrar participantes" << endl;
+						mostrar_participantes();
+						break;
+					case 2:
+						cout << "\t califiacar participante" << endl;
+						calificar();
+						break;
+					case 3:
+						cout << "\t buscar" << endl;
+						buscar_par();
+						break;
+					case 0:
+						cout << "saliendo" << endl;
+						_getch();
+						break;
+					default:
+						cout << "opcion invalida" << endl;
+						break;
+					}
+				} while (op3 != 0);
+			}
+			else
+			{
+				cout << "acceso negado" << endl;
+			}
+			break;
+		case 3:
+			mostrar_usuarios(1);
+			nivel = verificar_usuario();
+			if (nivel >= 1)
+			{
+				int op4;
+				do{
+					cout << "\t usuario espectador" << endl;
+					cout << "1. mostrar participantes" << endl;
+					cout << "2. buscar " << endl;
+					cout << "0. salir" << endl;
+					cout << "opcion: ";
+						op4 = leer_num();
+					switch (op4)
+					{
+					case 1:
+						cout << "\t mostrar participantes" << endl;
+						mostrar_participantes();
+						break;
+					case 2:
+						cout << "\t buscar" << endl;
+						buscar_par();
+						break;
+					case 0:
+						cout << "saliendo" << endl;
+						_getch();
+						break;
+					default:
+						cout << "opcion invalida" << endl;
+						break;
+					}
+				} while (op4 != 0);
+			}
+			else
+			{
+				cout << "acceso negado" << endl;
+			}
+			break;
+		case 9:
+			cout << "saliendo" << endl;
+			_getch();
+			break;
+		default:
+			cout << "dato invalido";
+			break;
+		}
+	} while (opcion != 9);
+}
+int verificar_usuario(void)
+{
+	FILE *ptr;
+	int nro_us, nivel = 0, intentos = 0;
+	long int dirfis;
+	string clave;
+	ptr = fopen("usuarios", "rb");
+	cout << "ingrese nro de usuario " << endl;
+	nro_us = leer_num();
+	dirfis = (nro_us-1 )*sizeof(usuario);
+	fseek(ptr, dirfis, SEEK_SET);
+	fread(&usuario, sizeof(usuario), 1, ptr);
+	if (nro_us == usuario.nrousu)
+	{
+		do{
+			cout << "ingrese clave: ";
+			getline(cin, clave);
+			if (clave == usuario.clave)
+			{
+				nivel = usuario.seguridad;
+			}
+			else
+			{
+				cout << "clave erronea" << endl;
+			}
+			intentos++;
+		} while (clave != usuario.clave && intentos != 5);
+	}
+	else
+	{
+		cout << "usuario inexistente" << endl;
+	}
+	fclose(ptr);
+	return nivel;
+}
+void cargar_usuarios(void)
+{
+	FILE *ptr; 
+	int n, nro_us = 1;
+	long int dirfis;
+	ptr = fopen("usuarios", "rb+");
+	if (ptr == NULL)
+	{
+		ptr = fopen("usuarios", "wb");
+	}
+	else
+	{
+		fread(&usuario, sizeof(usuario), 1, ptr);
+		while(!feof(ptr))
+		{
+			nro_us = usuario.nrousu;
+			fread(&usuario, sizeof(usuario), 1, ptr);
+		}
+		nro_us++;
+	}
+	cout << "ingrese cuantos usuarios desea ingresar: ";
+	n = leer_num();
+
+	for (int i = 0; i<n; i++)
+	{
+
+		
+		cout << "usuario numero: " << nro_us << endl;
+		usuario.nrousu = nro_us;
+		cout << "ingrese nombre: ";
+		getline(cin, usuario.nombreusu);
+		cout << "ingrese clave: ";
+		getline(cin, usuario.clave);
+		do{
+			cout << "nivel de seguridad (modificador/3) (calificador/2) (espectador/1) : ";
+			usuario.seguridad = leer_num();
+		} while ((usuario.seguridad != 1) && (usuario.seguridad != 2) && (usuario.seguridad != 3));
+		fwrite(&usuario, sizeof(usuario), 1, ptr);
+		nro_us++;
+		//}
+	}
+	fclose(ptr);
+}
+void eliminar_usuarios(void)
+{
+	FILE *ptr, *temporal;
+	long int dirfis;
+	int nro;
+	ptr = fopen("usuarios", "rb+");
+	if (ptr != NULL)
+	{
+		cout << "ingrese numero de usuario: ";
+		nro = leer_num();
+		dirfis = (nro - 1)*sizeof(usuario);
+		fseek(ptr, dirfis, SEEK_SET);
+		fread(&usuario, sizeof(usuario), 1, ptr);
+		if (nro != usuario.nrousu)
+		{
+			cout << "usuario inexistente " << endl;
+			fcloseall();
+			return;
+		}
+		else
+		{
+			usuario.nrousu = 0;
+			usuario.clave = "0";
+			usuario.nombreusu = "0";
+			usuario.seguridad = 0;
+			fwrite(&usuario, sizeof(usuario), 1, ptr);
+			temporal = fopen("temporal", "wb");
+			while (!feof(ptr))
+			{
+				if (usuario.nrousu != 0)
+				{
+					fwrite(&usuario, sizeof(usuario), 1, temporal);
+				}
+			}
+
+		}
+		fcloseall();
+		remove("usuarios");
+		rename("temporal", "usuarios");
+
+	}
+	else
+		cout << "no hay registros" << endl;
+}
+void mostrar_usuarios(int nivel)
+{
+	FILE *ptr;
+	ptr = fopen("usuarios", "rb");
+	if (ptr != NULL)
+	{
+		cout << " \tnro de usuario " << "\tnombre del usuario" << endl;
+		fread(&usuario, sizeof(usuario), 1, ptr);
+		while (!feof(ptr) && usuario.seguridad >= nivel)
+		{
+			cout << usuario.nrousu << "\t" << usuario.nombreusu << endl;
+			fread(&usuario, sizeof(usuario), 1, ptr);
+		}
+		fclose(ptr);
+	}
+	else
+	{
+		cout << "no hay datos en el archivo" << endl;
+	}
+
+}
+void modificar_usuarios(void)
+{
+	FILE *ptr;
+	long int dirfis;
+	int nro;
+	ptr = fopen("usuarios", "rb+");
+	if (ptr != NULL)
+	{
+		cout << "ingrese el nro de usuario a modificar: " << endl;
+		nro = leer_num();
+		dirfis = (nro - 1)*sizeof(usuario);
+		fseek(ptr, dirfis, SEEK_SET);
+		fread(&usuario, sizeof(usuario), 1, ptr);
+		if (nro == usuario.nrousu)
+		{
+			cout << "ingrese nombre: ";
+			getline(cin, usuario.nombreusu);
+			cout << "ingrese clave: ";
+			getline(cin, usuario.clave);
+			do{
+				cout << "nivel de seguridad (modificador/3) (calificador/2) (espectador/1) : ";
+				usuario.seguridad = leer_num();
+			} while ((usuario.seguridad != 1) && (usuario.seguridad != 2) && (usuario.seguridad != 3));
+			fseek(ptr, dirfis, SEEK_SET);
+			fwrite(&usuario, sizeof(usuario), 1, ptr);
+		}
+		else
+			cout << "no hay datos a modificar";
+
+	}
+	fclose(ptr);
+}
+void cargar_participante(void)
+{
+	FILE *ptr;
+	int n, nro = 1;;
+	long int dirfis;
+	ptr = fopen("participante.dat", "rb+");
+	if (ptr == NULL)
+	{
+		ptr = fopen("participante.dat", "wb");
+	}
+	else
+	{
+		fread(&participante, sizeof(participante), 1, ptr);
+		while(!feof(ptr))
+		{
+			nro = participante.registro;
+			fread(&participante, sizeof(participante), 1, ptr);
+		}
+		nro++;
+	}
+
+	cout << "ingrese cuantos participantes desea ingresar: ";
+	n = leer_num();
+	for (int i = 0; i<n; i++)
+	{
+		/*cout << "ingrese numero de participante";
+		cin >> nro;
+		dirfis = nro*sizeof(participante);
+		fseek(ptr, sizeof(participante), SEEK_SET);
+		fread(&participante, sizeof(participante), 1, ptr);
+		if (nro == participante.registro)
+		cout << "ya existe";
+		else
+		{*/
+		participante.registro = nro;
+		participante.nota = 0;
+		cout << "participante numero: " << nro << endl;
+		cout << "ingrese nombre: ";
+		getline(cin, participante.nombrepar);
+		cout << "ingrese el nombre de la materia: ";
+		getline(cin, participante.materia);
+		cout << "ingrese sigla de la materia: ";
+		getline(cin, participante.sigla);
+		cout << "ingrese nombre del proyecto: ";
+		getline(cin, participante.nombrep);
+		cout << "numero de mesa: ";
+		participante.mesa = leer_num();
+		fwrite(&participante, sizeof(participante), 1, ptr);
+		nro++;
+		//}
+	}
+	fclose(ptr);
+}
+void modificar_participante(void)
+{
+	FILE *ptr;
+	long int dirfis;
+	int nroreg;
+	ptr = fopen("participante.dat", "rb+");
+	if (ptr == NULL)
+	{
+		cout << "no hay que modificar!" << endl;
+		fclose(ptr);
+		return;
+	}
+	cout << "ingrese nro de registro del participante: ";
+	nroreg = leer_num();
+	dirfis = (nroreg - 1)*sizeof(participante);
+	fseek(ptr, dirfis, SEEK_SET);
+	fread(&participante, sizeof(participante), 1, ptr);
+	if (nroreg == participante.registro)
+	{
+		cout << "esta modificanto: " << endl;
+		cout << participante.nombrepar << " \t" << participante.mesa << " \t" << participante.materia << " \t" << participante.sigla << "\t" << endl;
+		cout << "modificar nombre: " << endl;
+		getline(cin, participante.nombrepar);
+		cout << "modificar mesa: " << endl;
+		participante.mesa = leer_num();
+		cout << "modificar materia: " << endl;
+		getline(cin, participante.materia);
+		cout << "modificar sigla: " << endl;
+		getline(cin, participante.sigla);
+
+
+	}
+}
+void eliminar_participante(void)
+{
+	FILE *ptr, *aux;
+	long int dirfis;
+	int reg;
+	ptr = fopen("participante.dat", "rb+");
+	if (ptr == NULL)
+	{
+		cout << "no existe ningun participante " << endl;
+		fclose(ptr);
+		return;
+	}
+	cout << "ingrese el registro del participante a eliminar: ";
+	reg = leer_num();
+	dirfis = (reg - 1)*sizeof(participante);
+	fseek(ptr, dirfis, SEEK_SET);
+	fread(&participante, sizeof(participante), 1, ptr);
+	if (participante.registro == reg)
+	{
+		aux = fopen("auxiliar", "wb");
+		participante.registro = 0;
+		while (!feof(ptr))
+		{
+			if (participante.registro != 0)
+			{
+				fwrite(&participante, sizeof(participante), 1, aux);
+			}
+		}
+		fcloseall();
+		remove("participante.dat");
+		rename("auxiliar", "participante.dat");
+	}
+	else
+		cout << "no existe el participante" << endl;
+
+	fclose(ptr);
+}
+void mostrar_participantes(void)
+{
+	FILE *ptr;
+	ptr = fopen("participante.dat", "rb+");
+	if (ptr == NULL)
+	{
+		cout << "no hay que mostrar" << endl;
+		return;
+	}
+	cout << "\tparticipantes " << endl;
+	cout << "registro" << " " << "nombre participante" << " " << "sigla" << " " << "materia" << " " << "nombre proyecto" << " " << "mesa" << " " << "nota" << endl;
+	fread(&participante, sizeof(participante), 1, ptr);
+	while (!feof(ptr))
+	{
+		cout << participante.registro << "\t" << participante.nombrepar << "\t" << participante.sigla << "\t" << participante.materia << "\t" << participante.nombrep << "\t" << participante.mesa << "\t" << participante.nota << endl;
+		fread(&participante, sizeof(participante), 1, ptr);
+	}
+	fclose(ptr);
+}
+void calificar(void)
+{
+	FILE *ptr;
+	int par;
+	long int dirfis;
+	float nota;
+	ptr = fopen("participante.dat", "rb+");
+	if (ptr == NULL)
+	{
+		cout << "no existe ningun archivo " << endl;
+		return;
+	}
+	mostrar_participantes();
+	cout << "ingrese el nro de registro del participante a calificar" << endl;
+	par = leer_num();
+	dirfis = (par - 1)*sizeof(participante);
+	fseek(ptr, dirfis, SEEK_SET);
+	fread(&participante, sizeof(participante), 1, ptr);
+	if (par == participante.registro)
+	{
+		cout << "nombre: " << participante.nombrep << endl;
+		cout << "nota: ";
+		participante.nota = leer_num();
+		fseek(ptr, dirfis, SEEK_SET);
+		fwrite(&participante, sizeof(participante), 1, ptr);
+	}
+	else
+	{
+		cout << "no existe participante" <<endl;
+	}
+	fclose(ptr);
+}
+void buscar_par(void)
+{
+	FILE *ptr;
+	int par;
+	long int dirfis;
+	ptr = fopen("participante.dat", "rb");
+	if (ptr == NULL)
+	{
+		cout << "no existe ningun participante" << endl;
+		fclose(ptr);
+		return;
+	}
+	cout << "ingrese nro de registro" << endl;
+	par = leer_num();
+	dirfis = (par - 1)*sizeof(participante);
+	fseek(ptr, dirfis, SEEK_SET);
+	fread(&participante, sizeof(participante), 1, ptr);
+	if (par == participante.registro)
+	{
+		cout << "registro" << " " << "nombre participante" << " " << "sigla" << " " << "materia" << " " << "nombre proyecto" << " " << "mesa" << " " << "nota" << endl;
+		cout << participante.registro << "\t" << participante.nombrepar << "\t" << participante.sigla << "\t" << participante.materia << "\t" << participante.nombrep << "\t" << participante.mesa << "\t" << participante.nota << endl;
+	}
+	else
+	{
+		cout << "participante no registrado" << endl;
+	}
+	fclose(ptr);
+}
+
+
+
+
+
